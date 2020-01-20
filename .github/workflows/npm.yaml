@@ -17,4 +17,4 @@ jobs:
             - name: Install dependencies js
               run: npm install
             - name: Run production mode
-              run: npm run prod
+              run: npm run dev
