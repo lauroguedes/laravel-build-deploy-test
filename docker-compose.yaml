@@ -1,0 +1,46 @@
+version: '3'
+services:
+  laraveltest:
+    build: ./.docker/php
+    container_name: laraveltest_app
+    ports: 
+      - "35729:35729"
+      - "3000:3000"
+      - "3001:3001"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - laraveltest-mysql
+      - laraveltest-redis
+
+  laraveltest-mysql:
+    image: mysql:5.7.22
+    container_name: laraveltest_mysql
+    command: --innodb-use-native-aio=0
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./.docker/dbdata:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: laraveltest
+      MYSQL_ROOT_PASSWORD: root
+
+  laraveltest-nginx:
+    build: ./.docker/nginx
+    container_name: laraveltest_nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - laraveltest
+
+  laraveltest-redis:
+    image: redis:alpine
+    container_name: laraveltest_redis
+    expose:
+      - 6379
