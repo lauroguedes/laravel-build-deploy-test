@@ -1,0 +1,20 @@
+name: Npm Workflow
+on:
+    push:
+        paths:
+            - 'resources/js/*'
+            - 'resources/sass/*'
+
+jobs:
+    npm-build:
+        name: Npm build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v1
+            - uses: actions/setup-node@v1
+              with:
+                node-version: '10.x'
+            - name: Install dependencies js
+              run: npm install
+            - name: Run production mode
+              run: npm run prod
